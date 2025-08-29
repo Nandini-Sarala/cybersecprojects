@@ -37,16 +37,6 @@ It demonstrates both "symmetric" and "asymmetric" encryption techniques and high
   ```bash
   pip install pycryptodome
   ```
-
- 📁 File Structure
-```
-encryption_tool/
-├── aes_module.py
-├── des_module.py
-├── rsa_module.py
-└── main.py
-```
-
  🧾 Sample Usage
 Each module includes:
 - `encrypt_<algorithm>(text, key)`
