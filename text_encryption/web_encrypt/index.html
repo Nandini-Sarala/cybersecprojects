@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Text Encryptor (AES-GCM)</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Roboto, Arial; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+    label { display:block; margin-top:10px; font-weight:600 }
+    textarea { width:100%; height:120px; }
+    input[type=password], input[type=text] { width:100%; padding:8px }
+    button { margin-top:10px; padding:8px 12px }
+    pre { background:#f6f7fb; padding:12px; border-radius:6px; overflow:auto }
+  </style>
+</head>
+<body>
+  <h1>Text Encryptor (AES / DES / RSA — client-side)</h1>
+  <p>Choose an algorithm, enter text and a passphrase. AES uses PBKDF2→AES‑GCM; DES uses TripleDES (CryptoJS); RSA generates a keypair and protects the private key with your passphrase.</p>
+
+  <label for="algo">Algorithm</label>
+  <select id="algo">
+    <option value="AES">AES-GCM (passphrase → key)</option>
+    <option value="DES">TripleDES (passphrase)</option>
+    <option value="RSA">RSA (generate keypair; private key protected by passphrase)</option>
+  </select>
+
+  <label for="plaintext">Plain text</label>
+  <textarea id="plaintext" placeholder="Type text to encrypt"></textarea>
+
+  <label for="password">Passphrase (used to derive key)</label>
+  <input id="password" type="password" placeholder="Enter a passphrase" />
+  <div style="display:flex;align-items:center;gap:12px;margin-top:6px;">
+    <meter id="passStrength" min="0" max="100" value="0" style="width:200px"></meter>
+    <span id="passStrengthText">Strength: N/A</span>
+  </div>
+  <div style="margin-top:8px; display:flex; gap:8px; align-items:center;">
+    <label style="margin:0; font-weight:500">Generator:</label>
+    <input id="genLength" type="number" min="8" max="128" value="24" style="width:72px" />
+    <button id="genPass">Generate passphrase</button>
+    <button id="copyPass">Copy passphrase</button>
+  </div>
+
+  <div>
+    <button id="encryptBtn">Encrypt</button>
+    <button id="decryptBtn">Decrypt (optional)</button>
+    <button id="copyBtn">Copy encrypted</button>
+  </div>
+
+  <h3>Encrypted output (base64)</h3>
+  <pre id="output">(no output yet)</pre>
+
+  <section id="rsaSection" style="margin-top:18px; display:none;">
+    <h3>RSA key tools</h3>
+    <div>
+      <button id="genRSA">Generate RSA keypair (encrypt private with passphrase)</button>
+    </div>
+    <label for="pubkey">Public key (PEM)</label>
+    <textarea id="pubkey" readonly style="height:120px"></textarea>
+
+    <label for="encPrivate">Encrypted private key (store safely) — packaged base64</label>
+    <textarea id="encPrivate" style="height:120px" placeholder="Encrypted private key will appear here after generation; you can paste it later to decrypt messages"></textarea>
+    <div style="margin-top:8px; display:flex; gap:8px; align-items:center;">
+      <button id="exportEncPrivate">Export encrypted private key</button>
+      <input id="importEncPrivateFile" type="file" accept="*/*" style="display:none" />
+      <button id="importEncPrivate">Import encrypted private key</button>
+    </div>
+
+    <div style="margin-top:12px; display:flex; gap:8px; align-items:center;">
+      <input id="serverUrl" type="text" placeholder="http://localhost:5000" style="width:280px" />
+      <button id="sendPubToServer">Send public key to server</button>
+      <button id="sendEncToServer">Send encrypted output to server</button>
+    </div>
+  </section>
+
+  <!-- CryptoJS for TripleDES (used in DES option) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
